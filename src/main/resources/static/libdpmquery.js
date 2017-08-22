@@ -13,20 +13,19 @@ function DPMQuery(){
         };
     }
 
-    this.DPMASTER = 'dpmaster.deathmask.net:27950';
-    this.QUERY_OPENARENA_DEFAULT = 'getservers 71 empty full demo';
-    this.QUERY_XONOTIC_DEFAULT = 'getservers Xonotic 3 empty full';
-    this.QUERY_QUAKE_3_ARENA_DEFAULT = 'getservers 68 empty full';
-    this.serviceURL = document.location.href + 'api/v1/master/query/';
+    var serviceURL = document.location.href + 'api/v1/master/query/';
 
-    console.log(this.serviceURL);
+    console.log(serviceURL);
 
-    this.queryMaster = function(address, query, successCallback, failCallback){
-        var endpoint = address || this.DPMASTER;
-        var request = query || this.QUERY_OPENARENA_DEFAULT;
+    this.queryMaster = function(address, query, game, successCallback, failCallback){
+        var endpoint = address || DPMQuery.DPMASTER;
+        var request = query || DPMQuery.QUERY_OPENARENA_DEFAULT;
         var success = successCallback || this.onSuccess;
         var failed = failCallback || this.onFailed;
-        var targetURL = this.serviceURL + endpoint + '/' + escape(request);
+        var targetURL = serviceURL + endpoint + '/' + escape(request);
+        if (game){
+            targetURL = targetURL + "?game=" + escape(game);
+        }
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('load', function(evt){
             success(this.endpoint, JSON.parse(this.responseText));
@@ -48,3 +47,8 @@ function DPMQuery(){
         console.warn(address, exception)
     };
 }
+
+DPMQuery.DPMASTER = 'dpmaster.deathmask.net:27950';
+DPMQuery.QUERY_OPENARENA_DEFAULT = 'getservers 71 empty full demo';
+DPMQuery.QUERY_XONOTIC_DEFAULT = 'getservers Xonotic 3 empty full';
+DPMQuery.QUERY_QUAKE_3_ARENA_DEFAULT = 'getservers 68 empty full';

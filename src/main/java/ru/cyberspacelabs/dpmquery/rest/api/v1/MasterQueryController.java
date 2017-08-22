@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.cyberspacelabs.darkplaces.GameServer;
 import ru.cyberspacelabs.dpmquery.contracts.DiscoveryService;
@@ -35,8 +36,11 @@ public class MasterQueryController {
             String master,
 
             @ApiParam(value = "Query according to game, e.g. \"getservers 68 empty full\" for Quake 3 Arena", required = true)
-            @PathVariable("query") String query
+            @PathVariable("query") String query,
+
+            @ApiParam("Optional parameter for filling \"game\" field; by default - UUID, assigned to request")
+            @RequestParam(value = "game", required = false) String game
     ) throws Exception {
-        return discoveryService.queryMaster(master, query);
+        return discoveryService.queryMaster(master, query, game);
     }
 }

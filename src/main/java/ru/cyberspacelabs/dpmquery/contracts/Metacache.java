@@ -9,5 +9,5 @@ import java.util.concurrent.ExecutionException;
  * Created by mzakharov on 19.06.17.
  */
 public interface Metacache {
-    Set<GameServer> refreshAndCache(String master, String query) throws ExecutionException;
+    Set<GameServer> refreshAndCache(String master, String query, String game) throws ExecutionException;
 }

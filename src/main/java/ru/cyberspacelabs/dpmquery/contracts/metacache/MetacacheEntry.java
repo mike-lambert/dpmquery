@@ -29,9 +29,10 @@ public class MetacacheEntry {
     @Value("${metacache.entry.expires:30}")
     private long lifetime;
 
-    public MetacacheEntry(String master, String query){
+    public MetacacheEntry(String master, String query, String game){
+        String gameId = (game != null && !game.trim().isEmpty() ? game : UUID.randomUUID().toString());
         this.key = addressAndQueryToKey(master, query);
-        this.discoveryClient = new GameBrowser(master, query).setGame(UUID.randomUUID().toString());
+        this.discoveryClient = new GameBrowser(master, query).setGame(gameId);
         this.cache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
                 .expireAfterWrite(60, TimeUnit.SECONDS)

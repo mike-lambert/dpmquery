@@ -4,9 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import ru.cyberspacelabs.darkplaces.GameServer;
 import ru.cyberspacelabs.dpmquery.contracts.Metacache;
@@ -14,7 +12,6 @@ import ru.cyberspacelabs.dpmquery.contracts.metacache.MetacacheEntry;
 
 import javax.annotation.PostConstruct;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -47,15 +44,15 @@ public class MetacacheImpl implements Metacache {
     }
 
     @Override
-    public Set<GameServer> refreshAndCache(String master, String query) throws ExecutionException {
+    public Set<GameServer> refreshAndCache(String master, String query, String game) throws ExecutionException {
         MetacacheEntry metacacheEntry = metacache.get(MetacacheEntry.addressAndQueryToKey(master, query),
-                () -> createMetacacheEntry(master, query));
+                () -> createMetacacheEntry(master, query, game));
         return metacacheEntry.refresh();
     }
 
-    private MetacacheEntry createMetacacheEntry(String master, String query) {
-        logger.info("Metacache missing for {} with query \"{}\"; Creating ...", master, query);
-        MetacacheEntry result = new MetacacheEntry(master, query);
+    private MetacacheEntry createMetacacheEntry(String master, String query, String game) {
+        logger.info("Metacache missing for {} with query \"{}\" for game \"{}\"; Creating ...", master, query, game);
+        MetacacheEntry result = new MetacacheEntry(master, query, game);
         result.setLifetime(entryLifetime);
         result.setMaxSize(entryMaxSize);
         result.afterWire();
