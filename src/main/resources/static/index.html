@@ -35,7 +35,7 @@
  </style>
  <script language="JavaScript" type="application/javascript" src="libdpmquery.js"></script>
  <script language="JavaScript" type="application/javascript">
-    new DPMQuery().queryMaster(DPMQuery.DPMASTER, DPMQuery.QUERY_XONOTIC_DEFAULT, function(master, servers){
+    new DPMQuery().queryMaster(DPMQuery.DPMASTER, DPMQuery.QUERY_XONOTIC_DEFAULT, 'Xonotic', function(master, servers){
         console.log('Master server ' + master + ' succeeded with ' + servers.length + ' server(s)');
         for(var index in servers){
             var server = servers[index];
