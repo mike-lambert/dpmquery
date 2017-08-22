@@ -129,12 +129,6 @@ public class GameBrowser {
                     break;
                 }
             }while(true);
-        } catch (SocketException e) {
-            e.printStackTrace();
-            client = null;
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            client = null;
         } catch (IOException e) {
             e.printStackTrace();
             client = null;
