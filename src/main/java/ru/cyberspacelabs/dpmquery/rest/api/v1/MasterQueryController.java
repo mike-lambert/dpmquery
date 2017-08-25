@@ -8,10 +8,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.cyberspacelabs.collections.ComparatorFactory;
+import ru.cyberspacelabs.collections.ServerPingComparator;
 import ru.cyberspacelabs.darkplaces.GameServer;
 import ru.cyberspacelabs.dpmquery.contracts.DiscoveryService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by mzakharov on 19.06.17.
@@ -30,7 +36,7 @@ public class MasterQueryController {
             produces = "application/json"
     )
     @RequestMapping("/query/{address}/{query}")
-    Set<GameServer> query(
+    List<GameServer> query(
             @ApiParam(value = "Master server UDP endpoint in format \"host:port\", e.g \"dpmaster.deathmask.net:27950\"", required = true)
             @PathVariable("address")
             String master,
@@ -39,8 +45,32 @@ public class MasterQueryController {
             @PathVariable("query") String query,
 
             @ApiParam("Optional parameter for filling \"game\" field; by default - UUID, assigned to request")
-            @RequestParam(value = "game", required = false) String game
+            @RequestParam(value = "game", required = false) String game,
+
+            @ApiParam("Optional parameter for applying sorting. E.g. \"ping|load|capacity\"")
+            @RequestParam(value = "sort", required = false) String sort,
+
+            @ApiParam("Optional parameter for limiting results. E.g. 10 (TOP-10)")
+            @RequestParam(value = "limit", required = false) Integer limit,
+
+            @ApiParam("Optional parameter for cutting servers, which ping more than pointed. Default 300 msec")
+            @RequestParam(value = "maxPing", required = false) Long maxPing
     ) throws Exception {
-        return discoveryService.queryMaster(master, query, game);
+        long over = maxPing == null ? 300 : maxPing;
+        List<GameServer> results = new ArrayList<>();
+        results.addAll(discoveryService.queryMaster(master, query, game));
+
+        results = results.stream().filter(s -> s.getRequestDuration() < maxPing).collect(Collectors.toList());
+
+        if (sort != null && !sort.trim().isEmpty()){
+            Collections.sort(results, ComparatorFactory.create(sort));
+        }
+
+        if (limit != null && limit > 0){
+            results = results.subList(0, Math.min(limit, results.size()));
+        }
+
+        return results;
+
     }
 }
