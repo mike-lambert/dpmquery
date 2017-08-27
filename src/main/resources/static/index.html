@@ -35,17 +35,27 @@
  </style>
  <script language="JavaScript" type="application/javascript" src="libdpmquery.js"></script>
  <script language="JavaScript" type="application/javascript">
-    new DPMQuery().queryMaster(DPMQuery.DPMASTER, DPMQuery.QUERY_XONOTIC_DEFAULT, 'Xonotic', function(master, servers){
-        console.log('Master server ' + master + ' succeeded with ' + servers.length + ' server(s)');
-        for(var index in servers){
-            var server = servers[index];
-            console.log(server.address + ' responded in ' + server.requestDuration
-                    + ' msec; running "' + server.map + '" in "' + server.gameType + '" mode with load '
-                    + server.playersPresent + '/' + server.slotsAvailable
-                    +' and labeled as "' + server.displayName + '"'
-            );
-        }
-    });
+    new DPMQuery().queryMaster(
+            {
+                address: DPMQuery.DPMASTER,
+                query: DPMQuery.QUERY_XONOTIC_DEFAULT,
+                game: 'Xonotic',
+                sort: 'ping|capacity',
+                limit: 25,
+                maxPing: 180
+            },
+            function(master, servers){
+                console.log('Master server ' + master + ' succeeded with ' + servers.length + ' server(s)');
+                for(var index in servers){
+                    var server = servers[index];
+                    console.log(server.address + ' responded in ' + server.requestDuration
+                            + ' msec; running "' + server.map + '" in "' + server.gameType + '" mode with load '
+                            + server.playersPresent + '/' + server.slotsAvailable
+                            +' and labeled as "' + server.displayName + '"'
+                    );
+                }
+            }
+    );
  </script>
  <body>
   <h1>DPMQuery</h1>
