@@ -60,7 +60,7 @@ public class MasterQueryController {
         List<GameServer> results = new ArrayList<>();
         results.addAll(discoveryService.queryMaster(master, query, game));
 
-        results = results.stream().filter(s -> s.getRequestDuration() < maxPing).collect(Collectors.toList());
+        results = results.stream().filter(s -> s.getRequestDuration() < over).collect(Collectors.toList());
 
         if (sort != null && !sort.trim().isEmpty()){
             Collections.sort(results, ComparatorFactory.create(sort));
