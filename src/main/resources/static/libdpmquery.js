@@ -17,14 +17,29 @@ function DPMQuery(){
 
     console.log(serviceURL);
 
-    this.queryMaster = function(address, query, game, successCallback, failCallback){
-        var endpoint = address || DPMQuery.DPMASTER;
-        var request = query || DPMQuery.QUERY_OPENARENA_DEFAULT;
+    this.queryMaster = function(objSettings, successCallback, failCallback){
+        var defaults = {
+            address: DPMQuery.DPMASTER,
+            query: DPMQuery.QUERY_OPENARENA_DEFAULT,
+            game: 'OpenArena',
+            sort: 'ping',
+            limit: 10,
+            maxPing: 200
+        };
+        var settings = objSettings || defaults;
+        var endpoint = settings.address || defaults.address;
+        var request = settings.query || defaults.query;
+        var order = settings.sort || defaults.sort;
+        var cut = settings.limit || defaults.limit;
+        var threshold = settings.maxPing || defaults.maxPing;
         var success = successCallback || this.onSuccess;
         var failed = failCallback || this.onFailed;
-        var targetURL = serviceURL + endpoint + '/' + escape(request);
-        if (game){
-            targetURL = targetURL + "?game=" + escape(game);
+        var targetURL = serviceURL + endpoint + '/' + escape(request)
+            + '?sort=' + escape(order)
+            + '&limit=' + escape(cut)
+            + '&maxPing=' + escape(threshold);
+        if (settings.game){
+            targetURL = targetURL + '&game=' + settings.game;
         }
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('load', function(evt){
