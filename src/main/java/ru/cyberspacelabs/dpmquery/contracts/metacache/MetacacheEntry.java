@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import ru.cyberspacelabs.darkplaces.GameBrowser;
 import ru.cyberspacelabs.darkplaces.GameServer;
+import ru.cyberspacelabs.dpmquery.Endpoint;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -47,13 +49,14 @@ public class MetacacheEntry {
         return discoveryClient;
     }
 
-    public Set<GameServer> refresh() {
+    public Set<GameServer> refresh(List<Endpoint> pinnedServers) {
         Map<String, GameServer> present = this.cache.asMap();
         Set<GameServer> result = Sets.newConcurrentHashSet(present.values());
         if (result.isEmpty()){
             logger.info("{}: cache expired or oversized; refreshing", discoveryClient.getMasterAddress());
             result = this.discoveryClient.refresh();
             result.parallelStream().forEach(server -> cache.put(server.getAddress(), server));
+            // TODO: pin servers
         }
         return result;
     }
