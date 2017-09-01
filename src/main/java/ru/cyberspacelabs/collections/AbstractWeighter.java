@@ -7,11 +7,11 @@ public abstract class AbstractWeighter<T> implements Weight<T> {
     protected double factor;
 
     public AbstractWeighter(){
-        setFactor(1);
+        this(1);
     }
 
     public AbstractWeighter(double factor){
-        setFactor(1);
+        setFactor(factor);
     }
 
     @Override

@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,7 +58,32 @@ public class MetacacheEntry {
             logger.info("{}: cache expired or oversized; refreshing", discoveryClient.getMasterAddress());
             result = this.discoveryClient.refresh();
             result.parallelStream().forEach(server -> cache.put(server.getAddress(), server));
-            // TODO: pin servers
+            // pin servers
+            final Set<GameServer> pinned = Sets.newConcurrentHashSet();
+            pinnedServers.forEach(endpoint -> {
+                try {
+                    cache.get(endpoint.toString(), () -> {
+                        GameServer result1 = new GameServer();
+                        result1.setAddress(endpoint.toString());
+                        result1.setDisplayName(endpoint.toString());
+                        result1.setPlayersPresent(0);
+                        result1.setGame(discoveryClient.getGame());
+                        result1.setGameType("");
+                        result1.setMap("");
+                        result1.setRequestDuration(0);
+                        result1.setServerProtocol(0);
+                        result1.setSlotsAvailable(0);
+                        pinned.add(result1);
+                        return result1;
+                    }).setPinned(true);
+                } catch (ExecutionException e) {
+                    logger.warn("Error pinning " + endpoint, e);
+                }
+            });
+
+            if (!pinned.isEmpty()){
+                result.addAll(pinned);
+            }
         }
         return result;
     }

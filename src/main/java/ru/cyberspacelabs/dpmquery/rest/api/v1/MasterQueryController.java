@@ -105,7 +105,7 @@ public class MasterQueryController {
         }
 
         if (request.getLimit() > 0){
-            results = results.subList(0, Math.min(request.getLimit(), results.size()));
+            results = results.subList(0, Math.min(request.getLimit() + request.getPinnedServers().size(), results.size()));
         }
 
         return results;
