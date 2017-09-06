@@ -20,3 +20,6 @@ If you using docker, don't forget to map port 8080.
 docker pull cyberspacelabs/dpmquery
 docker run -itd -p 80:8080 cyberspacelabs/dpmquery
 ```
+
+### Usage
+Really, it well self-documented and supported Swagger (OpenAPI) - just don't be lazy to check main page and then just play with Swagger UI, embedded into.
