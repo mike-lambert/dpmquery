@@ -21,6 +21,6 @@ public class ServerPinnedComparator extends AbstractWeighter<GameServer> impleme
 
     @Override
     public double weight(GameServer object) {
-        return object.isPinned() ? factor : 0;
+        return object.isPinned() ? 0 : factor;
     }
 }
