@@ -8,6 +8,10 @@ import java.util.Comparator;
  * Created by mike on 24.08.17.
  */
 public class ServerPingComparator extends AbstractWeighter<GameServer> implements Comparator<GameServer> {
+    public ServerPingComparator(double factor) {
+        super(factor);
+    }
+
     @Override
     public int compare(GameServer previous, GameServer current) {
         return previous.getRequestDuration() < current.getRequestDuration() ? 1

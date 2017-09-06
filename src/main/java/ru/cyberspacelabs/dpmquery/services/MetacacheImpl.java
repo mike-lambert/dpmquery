@@ -7,10 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.cyberspacelabs.darkplaces.GameServer;
+import ru.cyberspacelabs.dpmquery.Endpoint;
 import ru.cyberspacelabs.dpmquery.contracts.Metacache;
 import ru.cyberspacelabs.dpmquery.contracts.metacache.MetacacheEntry;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +49,14 @@ public class MetacacheImpl implements Metacache {
     public Set<GameServer> refreshAndCache(String master, String query, String game) throws ExecutionException {
         MetacacheEntry metacacheEntry = metacache.get(MetacacheEntry.addressAndQueryToKey(master, query),
                 () -> createMetacacheEntry(master, query, game));
-        return metacacheEntry.refresh();
+        return metacacheEntry.refresh(null);
+    }
+
+    @Override
+    public Set<GameServer> refreshAndCache(String master, String query, String game, List<Endpoint> pinnedServers) throws ExecutionException{
+        MetacacheEntry metacacheEntry = metacache.get(MetacacheEntry.addressAndQueryToKey(master, query),
+                () -> createMetacacheEntry(master, query, game));
+        return metacacheEntry.refresh(pinnedServers);
     }
 
     private MetacacheEntry createMetacacheEntry(String master, String query, String game) {

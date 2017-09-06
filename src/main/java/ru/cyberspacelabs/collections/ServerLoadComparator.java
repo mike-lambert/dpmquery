@@ -8,6 +8,10 @@ import java.util.Comparator;
  * Created by mike on 24.08.17.
  */
 public class ServerLoadComparator extends AbstractWeighter<GameServer> implements Comparator<GameServer> {
+    public ServerLoadComparator(double factor) {
+        super(factor);
+    }
+
     @Override
     public int compare(GameServer previous, GameServer current) {
         return previous.getPlayersPresent() < current.getPlayersPresent() ? 1

@@ -21,7 +21,7 @@ function DPMQuery(){
         var defaults = {
             address: DPMQuery.DPMASTER,
             query: DPMQuery.QUERY_OPENARENA_DEFAULT,
-            game: 'OpenArena',
+            game: null,
             sort: 'ping',
             limit: 10,
             maxPing: 200
@@ -34,13 +34,7 @@ function DPMQuery(){
         var threshold = settings.maxPing || defaults.maxPing;
         var success = successCallback || this.onSuccess;
         var failed = failCallback || this.onFailed;
-        var targetURL = serviceURL + endpoint + '/' + escape(request)
-            + '?sort=' + escape(order)
-            + '&limit=' + escape(cut)
-            + '&maxPing=' + escape(threshold);
-        if (settings.game){
-            targetURL = targetURL + '&game=' + settings.game;
-        }
+        var targetURL = serviceURL + endpoint + '/' + escape(request);
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('load', function(evt){
             success(this.endpoint, JSON.parse(this.responseText));
@@ -48,10 +42,31 @@ function DPMQuery(){
         xhr.addEventListener('error', function(evt){
             failed(this.endpoint, evt);
         });
-        console.log('sending request to ' + targetURL);
-        xhr.open('GET', targetURL);
         xhr.endpoint = endpoint;
-        xhr.send();
+        if (objSettings.pinnedServers && objSettings.pinnedServers.length){
+            var query = {
+                sort: order,
+                limit: cut,
+                maxPing: threshold,
+                game: settings.game,
+                pinnedServers : objSettings.pinnedServers
+            };
+            console.log('Query object:', query);
+            console.log('sending request to ' + targetURL);
+            xhr.open('POST', targetURL);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(query));
+        } else {
+            targetURL = targetURL + '?sort=' + escape(order)
+                + '&limit=' + escape(cut)
+                + '&maxPing=' + escape(threshold);
+            if (settings.game){
+                targetURL = targetURL + '&game=' + settings.game;
+            }
+            console.log('sending request to ' + targetURL);
+            xhr.open('GET', targetURL);
+            xhr.send();
+        }
     };
 
     this.onSuccess = function(address, data){

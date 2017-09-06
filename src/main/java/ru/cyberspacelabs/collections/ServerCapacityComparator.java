@@ -8,6 +8,10 @@ import java.util.Comparator;
  * Created by mike on 24.08.17.
  */
 public class ServerCapacityComparator extends AbstractWeighter<GameServer> implements Comparator<GameServer> {
+    public ServerCapacityComparator(double factor) {
+        super(factor);
+    }
+
     @Override
     public int compare(GameServer previous, GameServer current) {
         return previous.getSlotsAvailable() < current.getSlotsAvailable() ? 1

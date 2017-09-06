@@ -19,6 +19,7 @@ public class GameServer {
     private String gameType;
     private long requestDuration;
     private String game;
+    private boolean pinned;
 
     public GameServer(){
         setRequestDuration(-1);
@@ -101,13 +102,22 @@ public class GameServer {
         return getRequestDuration() >= 0;
     }
 
+    @ApiModelProperty(value = "Used for identifying request, which made this result", dataType = "string", required = true)
     public String getGame() {
         return game;
     }
 
-    @ApiModelProperty(value = "Used for identifying request, which made this result", dataType = "string", required = true)
     public void setGame(String game) {
         this.game = game;
+    }
+
+    @ApiModelProperty(value = "Used for identifying pinned server", dataType = "boolean", required = true)
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 
     @Override
