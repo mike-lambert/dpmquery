@@ -15,13 +15,13 @@ function DPMQuery(){
 
     var serviceURL = document.location.href + 'api/v1/master/query/';
 
-    console.log(serviceURL);
+    //console.log(serviceURL);
 
     this.queryMaster = function(objSettings, successCallback, failCallback){
         var defaults = {
             address: DPMQuery.DPMASTER,
             query: DPMQuery.QUERY_OPENARENA_DEFAULT,
-            game: null,
+            game: uuid(),
             sort: 'ping',
             limit: 10,
             maxPing: 200
@@ -35,6 +35,7 @@ function DPMQuery(){
         var success = successCallback || this.onSuccess;
         var failed = failCallback || this.onFailed;
         var targetURL = serviceURL + endpoint + '/' + escape(request);
+        var game = settings.game || defaults.game;
         var xhr = new XMLHttpRequest();
         xhr.addEventListener('load', function(evt){
             success(this.endpoint, JSON.parse(this.responseText));
@@ -48,7 +49,7 @@ function DPMQuery(){
                 sort: order,
                 limit: cut,
                 maxPing: threshold,
-                game: settings.game,
+                game: game,
                 pinnedServers : objSettings.pinnedServers
             };
             console.log('Query object:', query);
@@ -60,9 +61,7 @@ function DPMQuery(){
             targetURL = targetURL + '?sort=' + escape(order)
                 + '&limit=' + escape(cut)
                 + '&maxPing=' + escape(threshold);
-            if (settings.game){
-                targetURL = targetURL + '&game=' + settings.game;
-            }
+            targetURL = targetURL + '&game=' + game;
             console.log('sending request to ' + targetURL);
             xhr.open('GET', targetURL);
             xhr.send();
@@ -82,3 +81,10 @@ DPMQuery.DPMASTER = 'dpmaster.deathmask.net:27950';
 DPMQuery.QUERY_OPENARENA_DEFAULT = 'getservers 71 empty full demo';
 DPMQuery.QUERY_XONOTIC_DEFAULT = 'getservers Xonotic 3 empty full';
 DPMQuery.QUERY_QUAKE_3_ARENA_DEFAULT = 'getservers 68 empty full';
+
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}

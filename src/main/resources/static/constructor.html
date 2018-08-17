@@ -1,0 +1,163 @@
+<html>
+<head>
+    <title>DPMQuery Widget Constructor</title>
+</head>
+<link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
+<style type="text/css" media="screen">
+    body {
+        font-family: 'Jura', sans-serif;
+        font-size: 16px;
+        color: Black;
+        background-color: #EEEEDF;
+    }
+
+    h1 {
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .column {
+        padding-top: 10px;
+        max-width: 600px;
+        margin: auto;
+    }
+
+    a {
+        font-weight: bold;
+    }
+
+    input {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 10px;
+        padding-right: 10px;
+        min-width: 300px;
+        font-size: 13px;
+        font-family: 'Jura', sans-serif;
+        border: solid 1px black;
+        margin: 4px;
+        background-color: #F5F5F5;
+    }
+
+    select {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 10px;
+        padding-right: 10px;
+        min-width: 300px;
+        font-size: 13px;
+        font-family: 'Jura', sans-serif;
+        border: solid 1px black;
+        margin: 4px;
+        background-color: #F5F5F5;
+    }
+
+    label {
+        float: left;
+        width: 120px;
+        font-size: 13px;
+        font-weight: bold;
+        margin-right: -5px;
+    }
+
+    button {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        padding-left: 10px;
+        padding-right: 10px;
+        min-width: 300px;
+        min-height: 50px;
+        font-size: 15px;
+        font-family: 'Jura', sans-serif;
+        font-weight: bold;
+        border: solid 1px #7777FF;
+        margin: 4px;
+        background-color: #2A20AA;
+        color: white;
+        border-radius: 4px;
+    }
+
+    .hr {
+        border-top: solid 2px black;
+        margin-top: 20px;
+        padding-top: 10px;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 200px;
+        overflow-y: scroll;
+    }
+</style>
+<script language="JavaScript" type="application/javascript" src="libdpmquery.js"></script>
+<body onload="documentLoaded();">
+<h1>DPMQuery Widget Constructor</h1>
+<h2>A tool for embedding DPMQuery data into web pages</h2>
+<div class="column">
+    <h3>Codebase</h3>
+    <ul>
+        <li><a href="libdpmquery.js">libdpmquery.js</a></li>
+        <li><a href="swagger-ui.html">API playground</a></li>
+    </ul>
+    <div id="page">
+        <div id="form"  class="hr">
+            <div class="form-entry">
+                <label for="field_api">DPMQuery root</label>
+                <input id="field_api" type="text">
+            </div>
+            <div class="form-entry">
+                <label for="field_master">Master server</label>
+                <input id="field_master" type="text" value="dpmaster.deathmask.net:27950">
+            </div>
+            <div class="form-entry">
+                <label for="field_query">Query for</label>
+                <select id="field_query">
+                    <option id="getservers 71 empty full demo" selected="selected">OpenArena</option>
+                    <option id="getservers Xonotic 3 empty full">Xonotic</option>
+                    <option id="getservers 68 empty full">Quake 3 Arena</option>
+                </select>
+                <input id="field_sort" value="ping|load|capacity" type="hidden">
+            </div>
+            <div class="form-entry">
+                <label for="field_ping_threshold">Max ping, ms</label>
+                <input id="field_ping_threshold" type="number" value="100" max="300" min="1" step="1">
+            </div>
+            <div class="form-entry">
+                <label for="field_result_limit">Limit for</label>
+                <input id="field_result_limit" type="number" value="10" max="100" min="1" step="1">
+            </div>
+            <div class="form-entry">
+                <label for="button_generate">&nbsp;</label>
+                <button id="button_generate" type="button" onclick="generateCode('code');">Generate</button>
+            </div>
+        </div>
+        <div id="result" class="hr">
+            <textarea id="code">
+
+            </textarea>
+        </div>
+    </div>
+</div>
+<script language="JavaScript" type="application/javascript">
+    function documentLoaded() {
+        document.getElementById('field_api').value = document.location.href;
+    }
+
+    function generateCode(containerId) {
+        var container = document.getElementById(containerId);
+        var libdpmquery = '';
+        var restUrl = '';
+        var options = {};
+        var code = '{}';
+        container.innerText = code;
+    }
+</script>
+</body>
+</html>
